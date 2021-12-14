@@ -1,0 +1,93 @@
+.TH _PRINTF "Dec 09 2021" "simple shell manpage"
+
+.SH NAME
+        task_simple_shell.c - processes the commands it receives by keyboard,
+	displaying the result on the screen, either with the correct answer or
+	with an error message.
+
+.SH SYNOPSIS
+
+.B      #include "main.h"
+\fB    int _strlen(const char *s);
+\fB    char *_strdup(char *str);
+\fB    int _strcmp(char *s1, char *s2);
+\fB    char *str_concat(char *s1, char *s2);
+\fB    int _puts(char *envi);
+\fB    char *get_path(char *command);
+\fB    char **tokenize_line(char *line);
+\fB    char *read_line(void);
+\fB    int exec_line(char **args);
+       /* built-ins */
+\fB    void __exit(char **ptr);
+\fB    void __env(void);
+\fB    void (*check_for_builtins(char **args))(char **args);
+\fB    void welcomeScreen(void);
+\fB    void _free(char **d_pointer);
+
+.SH DESCRIPTION
+
+        Version of the simple shell function, code written by Daniel Rivera,
+	        Diego Jojoa, with the help of documentation shared by holberton
+		and information from the internet.
+
+        The simple_shell  produce results according to a keyboard input commands.
+	        the shell processes information received by keyboard and outputs
+		the request made.
+
+.SH RETURN VALUE
+
+        If the simple_shell  has a successful return, it will show on the screen
+	the response to the request, otherwise it will show a message that
+	informs about the non-existence of the commandof strings.
+
+.SH EXAMPLE
+
+#include "main.h"
+
+/**
+* get_path - function
+*
+* @arg: args arg to find path
+*
+* Return: char pointer with the path
+*/
+  char *get_path(char *arg)
+  {
+       char *path, *token, *newpath;
+       struct stat stats;
+
+       if (stat(arg, &stats) == 0)
+                return (arg);
+
+        while (*environ != NULL)
+        {
+                if (_strcmp(*environ, "PATH") == 0)
+		             path =  *environ + _strlen("PATH") + 1;
+                      environ++;
+        }
+
+        arg = str_concat("/", arg);
+        token = strtok(path, ":");
+
+        while (token != NULL)
+        {
+                newpath = str_concat(token, arg);
+                if (stat(newpath, &stats) == 0)
+                {
+                        free(arg);
+                        return (newpath);
+                }
+                free(newpath);
+		token = strtok(NULL, ":");
+	 }
+
+        free(token);
+	free(arg);
+	return (arg);
+}
+
+
+.SH AUTHOR
+
+DANIEL RIVERA @ruizdani301
+Diego Jojoa   @diegojojoayandun
